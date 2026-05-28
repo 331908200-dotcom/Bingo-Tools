@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bingo Maya Tools</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#top" aria-label="Bingo Maya Tools">
+          <img src="assets/bingo-icon.png" alt="">
+          <span>
+            <strong>Bingo</strong>
+            <small>Maya Tools</small>
+          </span>
+        </a>
+        <nav class="side-nav" aria-label="站点导航">
+          <a href="#tools">工具</a>
+          <a href="#install">安装</a>
+          <a href="#notes">说明</a>
+          <a href="#publish">发布</a>
+        </nav>
+        <div class="sidebar-note">
+          <span>Maya 2020+</span>
+          <span>PySide2</span>
+          <span>P4 Workflow</span>
+        </div>
+      </aside>
+
+      <main id="top" class="main">
+        <section class="intro">
+          <div class="intro-copy">
+            <p class="eyebrow">Animator tools for Maya production</p>
+            <h1>Bingo Maya Tools</h1>
+            <p>
+              这里集中放置我的 Maya 工具、安装入口和使用说明，覆盖动画制作、P4 工程文件流转、
+              表情控制器镜像、蒙皮辅助和个人工具箱管理。
+            </p>
+          </div>
+          <div class="intro-panel" aria-label="工具概览">
+            <div>
+              <strong id="toolCount">0</strong>
+              <span>Tools</span>
+            </div>
+            <div>
+              <strong>2020+</strong>
+              <span>Maya</span>
+            </div>
+            <div>
+              <strong>P4</strong>
+              <span>Ready</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="tools" class="workspace">
+          <div class="toolbar">
+            <label class="search">
+              <span>Search</span>
+              <input id="searchInput" type="search" placeholder="搜索工具、标签或命令">
+            </label>
+            <div id="filterBar" class="filters" aria-label="工具分类"></div>
+          </div>
+
+          <div class="content-grid">
+            <section class="tool-list" aria-label="工具列表">
+              <div id="toolGrid" class="tool-grid"></div>
+            </section>
+
+            <aside id="detailPanel" class="detail-panel" aria-live="polite"></aside>
+          </div>
+        </section>
+
+        <section id="install" class="section-band">
+          <div class="section-heading">
+            <p class="eyebrow">Install</p>
+            <h2>推荐安装方式</h2>
+          </div>
+          <div class="install-grid">
+            <article class="install-item">
+              <img src="assets/python.png" alt="">
+              <h3>Python 工具</h3>
+              <p>在 Maya Script Editor 的 Python 标签执行对应工具的启动命令。</p>
+              <pre><code>exec(open(r"D:/Codex/maya/animcraft_pose_mirror_tool.py", "r").read())</code></pre>
+            </article>
+            <article class="install-item">
+              <img src="assets/mel.png" alt="">
+              <h3>MEL / 拖拽安装</h3>
+              <p>工具箱类插件可以通过 install 脚本或拖拽安装入口注册到 Maya。</p>
+              <pre><code>D:/Codex/maya/Bingo_ToolBox_01/install.mel</code></pre>
+            </article>
+            <article class="install-item">
+              <img src="assets/settings.png" alt="">
+              <h3>发布到 GitHub Pages</h3>
+              <p>把这个站点目录作为 GitHub Pages 的根目录，或复制到仓库的 docs 目录。</p>
+              <pre><code>maya_tools_site/
+  index.html
+  styles.css
+  tools.js
+  assets/</code></pre>
+            </article>
+          </div>
+        </section>
+
+        <section id="notes" class="section-band notes">
+          <div class="section-heading">
+            <p class="eyebrow">Notes</p>
+            <h2>维护规则</h2>
+          </div>
+          <ul class="note-list">
+            <li>新增工具优先补充到 <code>tools.js</code>，页面会自动生成工具卡片和详情。</li>
+            <li>安装命令尽量使用绝对路径示例，方便在 Maya Script Editor 中直接复制测试。</li>
+            <li>截图、图标和演示 GIF 建议放到 <code>assets</code> 目录，发布时不会丢资源。</li>
+          </ul>
+        </section>
+
+        <section id="publish" class="section-band publish">
+          <div class="section-heading">
+            <p class="eyebrow">GitHub Pages</p>
+            <h2>上线路径</h2>
+          </div>
+          <p>
+            如果你想做成类似 <a href="https://anibullet.github.io/">anibullet.github.io</a> 的个人工具站，
+            可以新建 <code>你的用户名.github.io</code> 仓库，把本目录内容放到仓库根目录后开启 Pages。
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <script src="tools.js"></script>
+  </body>
+</html>
