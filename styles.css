@@ -677,3 +677,44 @@ pre code {
     padding: 28px;
   }
 }
+
+/* ===== Tutorial Section ===== */
+.tutorial-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.tutorial-item {
+  margin-bottom: 22px;
+}
+
+.tutorial-item h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: var(--cyan);
+}
+
+.tutorial-item p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.tutorial-item pre {
+  margin: 0 0 8px;
+}
+
+.tutorial-item pre code {
+  font-size: 12px;
+  padding: 10px 12px;
+  color: #a9c7d5;
+}
+
+.tutorial-copy {
+  margin-bottom: 0;
+  font-size: 12px;
+  min-height: 30px;
+  padding: 0 12px;
+}
