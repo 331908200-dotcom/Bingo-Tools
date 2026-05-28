@@ -523,3 +523,157 @@ pre code {
     border-bottom: 0;
   }
 }
+
+/* ===== Download Banner ===== */
+.download-banner {
+  margin-top: 28px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(122, 199, 109, 0.12), transparent 40%),
+    linear-gradient(315deg, rgba(76, 201, 216, 0.08), transparent 30%),
+    #151a1e;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.download-banner-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 32px;
+  padding: 40px 48px;
+  align-items: center;
+}
+
+.download-banner-copy h2 {
+  margin: 0 0 12px;
+  font-size: 30px;
+}
+
+.download-banner-copy p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.download-features {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.download-features li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.download-features li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--green);
+}
+
+.download-features code {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(48, 58, 66, 0.5);
+  font-size: 12px;
+}
+
+.download-banner-actions {
+  display: grid;
+  gap: 12px;
+  text-align: center;
+}
+
+.download-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 28px;
+  border: 1px solid rgba(122, 199, 109, 0.5);
+  border-radius: 8px;
+  background: rgba(122, 199, 109, 0.15);
+  color: #bff0b7;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.download-button:hover {
+  background: rgba(122, 199, 109, 0.25);
+  border-color: var(--green);
+}
+
+.download-button svg {
+  flex-shrink: 0;
+}
+
+.download-banner-actions small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.download-sha {
+  text-align: left;
+}
+
+.download-sha summary {
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.download-sha code {
+  display: block;
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #090c0e;
+  font-size: 11px;
+  word-break: break-all;
+  color: var(--muted);
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid rgba(122, 199, 109, 0.45);
+  border-radius: 8px;
+  background: rgba(122, 199, 109, 0.1);
+  color: #bff0b7;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.download-btn:hover {
+  background: rgba(122, 199, 109, 0.2);
+  border-color: var(--green);
+}
+
+@media (max-width: 900px) {
+  .download-banner-inner {
+    grid-template-columns: 1fr;
+    padding: 28px;
+  }
+}

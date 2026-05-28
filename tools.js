@@ -33,7 +33,8 @@ maya_time_machine.show()`,
     ],
     command: `// Drag this MEL file into Maya
 D:/Codex/maya/Bingo_ToolBox_01/install.mel`,
-    path: "D:/Codex/maya/Bingo_ToolBox_01/"
+    path: "D:/Codex/maya/Bingo_ToolBox_01/",
+    download: "https://raw.githubusercontent.com/331908200-dotcom/Bingo-Tools/main/Bingo_ToolBox_Maya2020-2026_CustomMenu_Setup.exe"
   },
   {
     name: "Animcraft Pose Mirror",
@@ -224,6 +225,7 @@ function renderDetail(tool) {
     <pre><code>${escapeHtml(tool.command)}</code></pre>
     <div class="detail-actions">
       <button class="copy-button" type="button" data-command="${escapeAttribute(tool.command)}">Copy Command</button>
+      ${tool.download ? `<a class="download-btn" href="${tool.download}" download>下载 EXE</a>` : ""}
     </div>
     <p><code>${tool.path}</code></p>
   `;
