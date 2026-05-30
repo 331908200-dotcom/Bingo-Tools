@@ -1076,6 +1076,83 @@ body::after {
   100% { transform: rotate(-5deg) scale(0.8, 1.2); opacity: 0.8; }
 }
 
+/* ---- Tiger ---- */
+.tiger-corner {
+  position: fixed;
+  bottom: -15px;
+  right: 15px;
+  width: 170px;
+  height: 170px;
+  z-index: 0;
+  pointer-events: none;
+  filter: drop-shadow(2px 4px 8px rgba(139,92,246,0.15));
+}
+.tiger-body {
+  animation: tiger-breathe 4s ease-in-out infinite;
+  transform-origin: 105px 115px;
+}
+@keyframes tiger-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03, 1.01); }
+}
+.tiger-head {
+  animation: tiger-head-cycle 75s ease-in-out infinite;
+  transform-origin: 90px 75px;
+}
+@keyframes tiger-head-cycle {
+  0%, 5% { transform: translateY(0) rotate(0); }
+  7% { transform: translateY(-8px) rotate(-3deg); }
+  9% { transform: translateY(-12px) rotate(0); }
+  10% { transform: translateY(-6px) rotate(2deg); }
+  12% { transform: translateY(0) rotate(0); }
+  14% { transform: translateY(0) rotate(-8deg); }
+  17% { transform: translateY(0) rotate(10deg); }
+  20% { transform: translateY(0) rotate(-3deg); }
+  22% { transform: translateY(0) rotate(0); }
+  100% { transform: translateY(0) rotate(0); }
+}
+.tiger-eye-left,
+.tiger-eye-right {
+  animation: tiger-eyes 75s step-end infinite;
+}
+@keyframes tiger-eyes {
+  0%, 5% { opacity: 1; visibility: visible; }
+  5.1%, 25% { opacity: 0; visibility: hidden; }
+  25.1%, 100% { opacity: 1; visibility: visible; }
+}
+.tiger-mouth {
+  animation: tiger-mouth-cycle 75s ease-in-out infinite;
+}
+@keyframes tiger-mouth-cycle {
+  0%, 6% { d: path("M85 86 Q90 88 95 86"); }
+  7% { d: path("M80 84 Q90 100 100 84"); }
+  9% { d: path("M78 82 Q90 105 102 82"); }
+  10% { d: path("M80 84 Q90 100 100 84"); }
+  12% { d: path("M85 86 Q90 88 95 86"); }
+  100% { d: path("M85 86 Q90 88 95 86"); }
+}
+.tiger-paws {
+  animation: tiger-paws-stretch 75s ease-in-out infinite;
+  transform-origin: 76px 140px;
+}
+@keyframes tiger-paws-stretch {
+  0%, 6% { transform: scale(1); }
+  7% { transform: scale(1.08, 1.15) translateY(-3px); }
+  10% { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+.tiger-tail {
+  animation: tiger-tail-wag 75s ease-in-out infinite;
+  transform-origin: 145px 120px;
+}
+@keyframes tiger-tail-wag {
+  0%, 5% { transform: rotate(0); }
+  8% { transform: rotate(15deg); }
+  10% { transform: rotate(-8deg); }
+  12% { transform: rotate(0); }
+  100% { transform: rotate(0); }
+}
+
 /* ===== Footer ===== */
 .footer {
   border-top: 2px solid var(--c-border-light);
