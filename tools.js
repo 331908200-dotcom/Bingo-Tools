@@ -358,129 +358,113 @@ if (searchInput) {
   });
 }
 
-// ===== Comment System =====
+// ===== Comment System (GitHub Issues) =====
 (function () {
-  var KEY = "bingo_msg";
-  var ADMIN_PASS = "bingo2025";
-  var isAdmin = false;
+  var OWNER = "331908200-dotcom";
+  var REPO = "Bingo-Tools";
+  var LABEL = "comment";
+  var GH_TOKEN = "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";
+  var API = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/issues";
 
-  function getMsgs() {
-    try { return JSON.parse(localStorage.getItem(KEY)) || []; }
-    catch (e) { return []; }
-  }
-  function saveMsgs(list) { localStorage.setItem(KEY, JSON.stringify(list)); }
+  var msgInput = document.getElementById("msgInput");
+  var sendBtn = document.getElementById("sendBtn");
+  var msgList = document.getElementById("msgList");
+  var msgLoading = document.getElementById("msgLoading");
 
-  function renderMsgs() {
-    var list = getMsgs();
-    var el = document.getElementById("msgList");
-    if (!el) return;
-    el.innerHTML = "";
-    list.forEach(function (item, i) {
-      var div = document.createElement("div");
-      div.className = "msg-item";
-      div.innerHTML =
-        '<div class="msg-body">' +
-          (item.nick ? '<div class="msg-nick">' + item.nick + '</div>' : '') +
-          '<div class="msg-text">' + item.content + '</div>' +
-          '<div class="msg-time">' + item.time + '</div>' +
-        '</div>' +
-        '<button class="btn-msg-del" data-i="' + i + '" style="display:' + (isAdmin ? 'inline-block' : 'none') + '">删除</button>';
-      el.appendChild(div);
+  if (!msgList || !msgInput) return;
+
+  function api(method, path, body) {
+    var xhr = new XMLHttpRequest();
+    var url = path.startsWith("http") ? path : "https://api.github.com" + path;
+    return new Promise(function (resolve, reject) {
+      xhr.open(method, url);
+      xhr.setRequestHeader("Authorization", "Bearer " + GH_TOKEN);
+      xhr.setRequestHeader("Accept", "application/vnd.github+json");
+      if (body) {
+        xhr.setRequestHeader("Content-Type", "application/json");
+      }
+      xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(JSON.parse(xhr.responseText));
+        } else {
+          reject(xhr.status + ": " + xhr.responseText);
+        }
+      };
+      xhr.onerror = function () { reject("网络错误"); };
+      xhr.send(body ? JSON.stringify(body) : null);
     });
   }
 
-  function refreshDelBtns() {
-    var btns = document.querySelectorAll(".btn-msg-del");
-    btns.forEach(function (b) { b.style.display = isAdmin ? "inline-block" : "none"; });
+  function loadComments() {
+    if (msgLoading) msgLoading.style.display = "block";
+    api("GET", API + "?labels=" + LABEL + "&state=open&sort=created&direction=desc&per_page=50")
+      .then(function (issues) {
+        if (msgLoading) msgLoading.style.display = "none";
+        msgList.innerHTML = "";
+        if (!issues.length) {
+          msgList.innerHTML = '<div style="text-align:center;color:var(--c-text-light);padding:20px;font-size:13px">暂无留言，来说两句吧~</div>';
+          return;
+        }
+        issues.forEach(function (issue) {
+          var div = document.createElement("div");
+          div.className = "msg-item";
+          div.innerHTML =
+            '<div class="msg-body">' +
+              '<div class="msg-text">' + esc(issue.body) + '</div>' +
+              '<div class="msg-time">' + fmtDate(issue.created_at) + '</div>' +
+            '</div>';
+          msgList.appendChild(div);
+        });
+      })
+      .catch(function (err) {
+        if (msgLoading) msgLoading.style.display = "none";
+        msgList.innerHTML = '<div style="text-align:center;color:var(--c-coral);padding:20px;font-size:13px">加载失败，请刷新重试</div>';
+        console.error("Load err:", err);
+      });
   }
 
-  // Send
-  var sendBtn = document.getElementById("sendBtn");
-  var msgNick = document.getElementById("msgNick");
-  var msgInput = document.getElementById("msgInput");
-  if (sendBtn && msgInput) {
+  function esc(text) {
+    var d = document.createElement("div");
+    d.textContent = text;
+    return d.innerHTML.replace(/\\n/g, "<br>");
+  }
+
+  function fmtDate(s) {
+    var d = new Date(s);
+    return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+  }
+  function pad(n) { return n < 10 ? "0" + n : "" + n; }
+
+  if (sendBtn) {
     sendBtn.addEventListener("click", function () {
       var val = msgInput.value.trim();
       if (!val) return;
-      var now = new Date();
-      var time = now.getFullYear() + "-" +
-        String(now.getMonth() + 1).padStart(2, "0") + "-" +
-        String(now.getDate()).padStart(2, "0") + " " +
-        String(now.getHours()).padStart(2, "0") + ":" +
-        String(now.getMinutes()).padStart(2, "0");
-      var nick = (msgNick && msgNick.value.trim()) || "";
-      var list = getMsgs();
-      list.push({ nick: nick, content: val, time: time });
-      saveMsgs(list);
-      renderMsgs();
-      refreshDelBtns();
-      msgInput.value = "";
+      sendBtn.disabled = true;
+      sendBtn.textContent = "发送中...";
+      api("POST", API, {
+        title: "[留言] " + val.slice(0, 30) + (val.length > 30 ? "..." : ""),
+        body: val,
+        labels: [LABEL]
+      })
+      .then(function () {
+        msgInput.value = "";
+        sendBtn.disabled = false;
+        sendBtn.textContent = "发送";
+        loadComments();
+      })
+      .catch(function (err) {
+        alert("发送失败: " + String(err).slice(0, 80));
+        sendBtn.disabled = false;
+        sendBtn.textContent = "发送";
+      });
     });
+  }
+
+  if (msgInput) {
     msgInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") sendBtn.click();
+      if (e.key === "Enter" && sendBtn) sendBtn.click();
     });
   }
 
-  // Delete single
-  var msgList = document.getElementById("msgList");
-  if (msgList) {
-    msgList.addEventListener("click", function (e) {
-      if (e.target.classList.contains("btn-msg-del") && isAdmin) {
-        var i = Number(e.target.dataset.i);
-        var list = getMsgs();
-        list.splice(i, 1);
-        saveMsgs(list);
-        renderMsgs();
-        refreshDelBtns();
-      }
-    });
-  }
-
-  // Admin toggle
-  var adminToggle = document.getElementById("adminToggle");
-  var adminActions = document.getElementById("adminActions");
-  var clearAllBtn = document.getElementById("clearAllBtn");
-  var adminExit = document.getElementById("adminExit");
-
-  if (adminToggle) {
-    adminToggle.addEventListener("click", function () {
-      if (isAdmin) {
-        isAdmin = false;
-        adminActions.style.display = "none";
-        adminToggle.textContent = "🔑 管理员";
-        refreshDelBtns();
-        return;
-      }
-      var pw = prompt("请输入管理员密码：");
-      if (pw === ADMIN_PASS) {
-        isAdmin = true;
-        adminActions.style.display = "inline-flex";
-        adminToggle.textContent = "✅ 管理员";
-        refreshDelBtns();
-      } else if (pw !== null) {
-        alert("密码错误");
-      }
-    });
-  }
-
-  if (clearAllBtn) {
-    clearAllBtn.addEventListener("click", function () {
-      if (!confirm("确定要清空所有留言吗？此操作不可恢复！")) return;
-      saveMsgs([]);
-      renderMsgs();
-      refreshDelBtns();
-    });
-  }
-
-  if (adminExit) {
-    adminExit.addEventListener("click", function () {
-      isAdmin = false;
-      adminActions.style.display = "none";
-      adminToggle.textContent = "🔑 管理员";
-      refreshDelBtns();
-    });
-  }
-
-  // Init
-  renderMsgs();
+  loadComments();
 })();
