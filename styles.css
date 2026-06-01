@@ -936,16 +936,6 @@ body::after {
   mix-blend-mode: normal;
 }
 
-/* ---- Bird Video ---- */
-.bird-corner {
-  position: fixed;
-  bottom: 0;
-  left: 10px;
-  width: 180px;
-  z-index: 0;
-  pointer-events: none;
-}
-
 /* ===== Footer ===== */
 .footer {
   border-top: 2px solid var(--c-border-light);
