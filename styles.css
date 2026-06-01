@@ -1292,16 +1292,22 @@ body::after {
   background: rgba(255,255,255,0.9);
 }
 .msg-color-picker {
+  -webkit-appearance: none;
+  appearance: none;
   width: 36px;
   height: 36px;
   border-radius: 50%;
   border: 3px solid rgba(244, 114, 182, 0.4);
   cursor: pointer;
-  padding: 2px;
+  padding: 0;
   background: none;
+  overflow: hidden;
   box-shadow: 0 0 12px rgba(244, 114, 182, 0.2);
   transition: all 0.2s;
 }
+.msg-color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+.msg-color-picker::-webkit-color-swatch { border: none; border-radius: 50%; }
+.msg-color-picker::-moz-color-swatch { border: none; border-radius: 50%; }
 .msg-color-picker:hover {
   box-shadow: 0 0 18px rgba(244, 114, 182, 0.4);
   transform: scale(1.08);
