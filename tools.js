@@ -393,3 +393,136 @@ if (searchInput) {
     }
   });
 })();
+
+// ===== Message Board =====
+(function () {
+  var STORAGE = "bingo_msg_board";
+  var msgInput = document.getElementById("msgInput");
+  var sendBtn = document.getElementById("sendBtn");
+  var msgList = document.getElementById("msgList");
+  var fontPicker = document.getElementById("msgFontPicker");
+  var colorPicker = document.getElementById("msgColorPicker");
+
+  if (!msgInput || !msgList) return;
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORAGE)) || []; }
+    catch (e) { return []; }
+  }
+  function save(list) { localStorage.setItem(STORAGE, JSON.stringify(list)); }
+
+  function fmtDate() {
+    var d = new Date();
+    var p = function (n) { return (n < 10 ? "0" : "") + n; };
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+  }
+
+  function esc(str) {
+    var div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML.replace(/\n/g, "<br>");
+  }
+
+  function renderReplies(replies, msgId) {
+    var html = '<div class="msg-replies">';
+    (replies || []).forEach(function (r) {
+      html += '<div class="msg-reply-item">' +
+        '<div style="font-family:' + r.font + ';color:' + r.color + '">' + esc(r.content) + '</div>' +
+        '<div class="msg-reply-time">' + r.time + '</div>' +
+        '</div>';
+    });
+    html += '<div class="msg-reply-input-row">' +
+      '<input class="msg-reply-input" placeholder="回复..." maxlength="300">' +
+      '<button class="btn-reply-send">发送</button>' +
+      '</div></div>';
+    return html;
+  }
+
+  function render() {
+    var list = load();
+    msgList.innerHTML = "";
+    list.forEach(function (msg, idx) {
+      var div = document.createElement("div");
+      div.className = "msg-item";
+      div.innerHTML =
+        '<div class="msg-item-content" style="font-family:' + msg.font + ';color:' + msg.color + '">' + esc(msg.content) + '</div>' +
+        '<div class="msg-item-meta">' +
+          '<span class="msg-item-time">' + msg.time + '</span>' +
+          '<span class="msg-item-reply-btn" data-idx="' + idx + '">' + (msg.replies && msg.replies.length ? (msg.replies.length + " 条回复") : "回复") + '</span>' +
+          '<span class="msg-item-del" data-idx="' + idx + '">删除</span>' +
+        '</div>' +
+        renderReplies(msg.replies || [], idx);
+      msgList.appendChild(div);
+    });
+
+    // bind reply toggle
+    msgList.querySelectorAll(".msg-item-reply-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var repliesEl = btn.parentElement.parentElement.querySelector(".msg-replies");
+        if (!repliesEl) return;
+        repliesEl.style.display = repliesEl.style.display === "none" ? "" : "none";
+      });
+    });
+
+    // bind reply send
+    msgList.querySelectorAll(".btn-reply-send").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var row = btn.parentElement;
+        var input = row.querySelector(".msg-reply-input");
+        var repliesEl = row.parentElement;
+        var msgItem = repliesEl.parentElement;
+        var replyBtn = msgItem.querySelector(".msg-item-reply-btn");
+        var idx = parseInt(replyBtn.dataset.idx);
+        var val = input.value.trim();
+        if (!val) return;
+
+        var list = load();
+        if (!list[idx].replies) list[idx].replies = [];
+        list[idx].replies.push({
+          content: val,
+          time: fmtDate(),
+          font: fontPicker ? fontPicker.value : "Nunito",
+          color: colorPicker ? colorPicker.value : "#3d2c5e"
+        });
+        save(list);
+        render();
+      });
+    });
+
+    // bind delete
+    msgList.querySelectorAll(".msg-item-del").forEach(function (del) {
+      del.addEventListener("click", function () {
+        var idx = parseInt(del.dataset.idx);
+        var list = load();
+        list.splice(idx, 1);
+        save(list);
+        render();
+      });
+    });
+  }
+
+  sendBtn.addEventListener("click", function () {
+    var val = msgInput.value.trim();
+    if (!val) return;
+    var list = load();
+    list.unshift({
+      content: val,
+      time: fmtDate(),
+      font: fontPicker.value,
+      color: colorPicker.value,
+      replies: []
+    });
+    save(list);
+    msgInput.value = "";
+    render();
+  });
+
+  msgInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendBtn.click();
+    }
+  });
+
+  render();
+})();

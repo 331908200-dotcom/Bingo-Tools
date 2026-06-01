@@ -1245,6 +1245,187 @@ body::after {
 }
 .qr-switch:hover { color: var(--c-accent-hover); }
 
+
+/* ===== Message Board ===== */
+.message-section {
+  padding-top: 0;
+}
+.message-box {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 24px;
+  margin: 0 24px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.06);
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.msg-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.msg-font-picker {
+  font-family: "Nunito", sans-serif;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--c-border-light);
+  background: rgba(255,255,255,0.7);
+  color: var(--c-text);
+  cursor: pointer;
+}
+.msg-color-picker {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--c-border-light);
+  cursor: pointer;
+  padding: 2px;
+  background: none;
+}
+
+.msg-input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: flex-end;
+}
+.msg-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--c-border-light);
+  border-radius: 14px;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  color: var(--c-text);
+  resize: vertical;
+  outline: none;
+  background: rgba(255,255,255,0.7);
+  transition: border 0.2s;
+}
+.msg-input:focus {
+  border-color: var(--c-accent);
+}
+.btn-msg-send {
+  background: var(--c-accent);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 10px 22px;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-msg-send:hover {
+  background: var(--c-accent-hover);
+  transform: translateY(-1px);
+}
+
+.msg-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.msg-item {
+  background: rgba(255,255,255,0.6);
+  border-radius: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255,255,255,0.8);
+}
+.msg-item-content {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+.msg-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--c-text-light);
+}
+.msg-item-time { opacity: 0.8; }
+.msg-item-reply-btn {
+  cursor: pointer;
+  color: var(--c-accent);
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.msg-item-reply-btn:hover { color: var(--c-accent-hover); }
+.msg-item-del {
+  cursor: pointer;
+  color: #ef4444;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  font-size: 12px;
+}
+.msg-item-del:hover { opacity: 1; }
+
+.msg-replies {
+  margin-top: 10px;
+  padding-left: 12px;
+  border-left: 2px solid var(--c-border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.msg-reply-item {
+  font-size: 13px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 10px;
+}
+.msg-reply-time {
+  font-size: 11px;
+  color: var(--c-text-light);
+  margin-top: 4px;
+}
+.msg-reply-input-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.msg-reply-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--c-border-light);
+  border-radius: 10px;
+  font-family: "Nunito", sans-serif;
+  font-size: 13px;
+  outline: none;
+  background: rgba(255,255,255,0.7);
+}
+.msg-reply-input:focus { border-color: var(--c-accent); }
+.btn-reply-send {
+  background: var(--c-accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-family: "Nunito", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-reply-send:hover { background: var(--c-accent-hover); }
+
+@media (max-width: 640px) {
+  .msg-input-row { flex-direction: column; }
+  .msg-toolbar { flex-wrap: wrap; }
+}
+
 /* ===== Footer ===== */
 .footer {
   border-top: 2px solid var(--c-border-light);
