@@ -385,7 +385,7 @@ if (searchInput) {
   qrSwitch.addEventListener("click", function () {
     isWeChat = !isWeChat;
     if (isWeChat) {
-      qrImgBox.innerHTML = "<span class=\"qr-placeholder\">微信收款码</span>";
+      qrImgBox.innerHTML = '<img src="assets/wechat-qr.png" alt="微信收款码">';
       qrSwitch.innerText = "点击切换：支付宝";
     } else {
       qrImgBox.innerHTML = "<img src=\"assets/alipay-qr.png\" alt=\"支付宝收款码\">";
