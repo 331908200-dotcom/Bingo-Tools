@@ -197,27 +197,6 @@ body::after {
   z-index: 1;
 }
 
-/* Hero sparkles */
-.hero::before {
-  content: "✦ ✦ ✦";
-  position: absolute;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 20px;
-  color: var(--c-gold);
-  letter-spacing: 24px;
-  opacity: 0.6;
-  animation: sparkle-float 3s ease-in-out infinite;
-}
-
-@keyframes sparkle-float {
-  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
-  50% { transform: translateX(-50%) translateY(-8px); opacity: 1; }
-}
-
-.hero-logo {
-  width: 110px;
   height: 110px;
   border-radius: 28px;
   margin-bottom: 28px;
