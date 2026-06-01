@@ -356,6 +356,8 @@ if (searchInput) {
     render();
     renderModuleGridFiltered();
 
+  });
+}
 // ===== Donate QR =====
 (function () {
   var donateBtn = document.getElementById("donateBtn");
