@@ -1149,19 +1149,25 @@ body::after {
   margin-bottom: 12px;
 }
 .donate-btn {
-  background: #f1f5f9;
-  border: 1px solid var(--c-border-light);
-  color: var(--c-text-light);
+  background: #f9a8d4;
+  border: 2px solid #f472b6;
+  color: #be185d;
   border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  font-size: 20px;
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s;
   line-height: 1;
   padding: 0;
+  box-shadow: 0 4px 12px rgba(244, 114, 182, 0.25);
 }
 .donate-btn:hover {
+  background: #f472b6;
+  color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 6px 18px rgba(244, 114, 182, 0.4);
+}
   background: #e2e8f0;
   color: var(--c-accent);
 }
