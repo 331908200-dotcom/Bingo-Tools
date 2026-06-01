@@ -419,6 +419,17 @@ if (searchInput) {
 
   if (!msgInput || !msgList) return;
 
+  // 随机昵称（持久化到localStorage）
+  var adjectives = ["快乐的","可爱的","认真的","悠闲的","好奇的","勇敢的","温柔的","机智的"];
+  var animals = ["小熊猫","小海豚","小狐狸","小兔子","小松鼠","小企鹅","小考拉","小柴犬","小橘猫","小鹦鹉","小仓鼠","小鹿"];
+  var USER_KEY = "bingo_msg_name";
+  var userName = localStorage.getItem(USER_KEY);
+  if (!userName) {
+    userName = adjectives[Math.floor(Math.random() * adjectives.length)] + animals[Math.floor(Math.random() * animals.length)];
+    localStorage.setItem(USER_KEY, userName);
+  }
+
+
   fontPicker.addEventListener("change", function () { msgInput.style.fontFamily = fontPicker.value; });
   colorPicker.addEventListener("input", function () { msgInput.style.color = colorPicker.value; });
   msgInput.style.fontFamily = fontPicker.value;
@@ -453,14 +464,14 @@ if (searchInput) {
   }
 
   function parseBody(body) {
-    var font = "Nunito, sans-serif", color = "#3d2c5e", text = body || "";
+    var name = "匿名", font = "Nunito, sans-serif", color = "#3d2c5e", text = body || "";
     var m = (body || "").match(/^\[\[FONT:(.*?)\]\]\[\[COLOR:(.*?)\]\]/);
-    if (m) { font = m[1]; color = m[2]; text = body.replace(m[0], "").trim(); }
-    return { font: font, color: color, text: text };
+    if (m) { name = m[1]; font = m[2]; color = m[3]; text = body.replace(m[0], "").trim(); }
+    return { name: name, font: font, color: color, text: text };
   }
 
   function wrapBody(text, font, color) {
-    return "[[FONT:" + font + "]][[COLOR:" + color + "]]" + text;
+    return "[[NAME:" + userName + "]][[FONT:" + font + "]][[COLOR:" + color + "]]" + text;
   }
 
   function loadReplies(issueNum, containerEl) {
@@ -473,9 +484,8 @@ if (searchInput) {
           var parsed = parseBody(c.body);
           var div = document.createElement("div");
           div.className = "msg-reply-item";
-          div.innerHTML = '<div style="font-family:' + parsed.font + ';color:' + parsed.color + '">' + esc(parsed.text) + '</div>' +
+          div.innerHTML = '<div style="font-family:' + parsed.font + ';color:' + parsed.color + '">' + esc(parsed.text) + '</div><span class="msg-reply-nick">' + esc(parsed.name) + ' </span>' +
             '<div class="msg-reply-time">' + fmtDate(c.created_at) + '</div>';
-          containerEl.appendChild(div);
         });
       })
       .catch(function () { containerEl.innerHTML = '<div style="color:#ef4444;font-size:12px;padding:4px 0">加载失败</div>'; });
@@ -497,6 +507,7 @@ if (searchInput) {
           div.innerHTML =
             '<div class="msg-item-content" style="font-family:' + parsed.font + ';color:' + parsed.color + '">' + esc(parsed.text) + '</div>' +
             '<div class="msg-item-meta">' +
+              '<span class="msg-item-nick">' + esc(parsed.name) + '</span>' +
               '<span class="msg-item-time">' + fmtDate(issue.created_at) + '</span>' +
               '<span class="msg-item-reply-btn" data-num="' + issue.number + '">' + (issue.comments ? (issue.comments + " 条回复") : "回复") + '</span>' +
             '</div>' +
