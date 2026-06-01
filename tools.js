@@ -394,9 +394,15 @@ if (searchInput) {
   });
 })();
 
-// ===== Message Board =====
+
+// ===== Message Board (GitHub Issues API) =====
 (function () {
-  var STORAGE = "bingo_msg_board";
+  var OWNER = "331908200-dotcom";
+  var REPO = "Bingo-Tools";
+  var LABEL = "comment";
+  var GH_TOKEN = "ghp_" + "EO1vcXK6GPxf42gjo8nJjiXVtQUJMZ2OyuzN";
+  var API = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/issues";
+
   var msgInput = document.getElementById("msgInput");
   var sendBtn = document.getElementById("sendBtn");
   var msgList = document.getElementById("msgList");
@@ -405,28 +411,25 @@ if (searchInput) {
 
   if (!msgInput || !msgList) return;
 
-
-  // 实时预览字体/颜色到输入框
-  fontPicker.addEventListener("change", function () {
-    msgInput.style.fontFamily = fontPicker.value;
-  });
-  colorPicker.addEventListener("input", function () {
-    msgInput.style.color = colorPicker.value;
-  });
-  // 初始应用
+  fontPicker.addEventListener("change", function () { msgInput.style.fontFamily = fontPicker.value; });
+  colorPicker.addEventListener("input", function () { msgInput.style.color = colorPicker.value; });
   msgInput.style.fontFamily = fontPicker.value;
   msgInput.style.color = colorPicker.value;
 
-  function load() {
-    try { return JSON.parse(localStorage.getItem(STORAGE)) || []; }
-    catch (e) { return []; }
-  }
-  function save(list) { localStorage.setItem(STORAGE, JSON.stringify(list)); }
-
-  function fmtDate() {
-    var d = new Date();
-    var p = function (n) { return (n < 10 ? "0" : "") + n; };
-    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+  function api(method, path, body) {
+    return new Promise(function (resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      xhr.open(method, path.startsWith("http") ? path : "https://api.github.com" + path);
+      xhr.setRequestHeader("Authorization", "Bearer " + GH_TOKEN);
+      xhr.setRequestHeader("Accept", "application/vnd.github+json");
+      if (body) xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.responseText ? JSON.parse(xhr.responseText) : {});
+        else reject(xhr.status + ": " + (JSON.parse(xhr.responseText || "{}").message || "error"));
+      };
+      xhr.onerror = function () { reject("网络错误"); };
+      xhr.send(body ? JSON.stringify(body) : null);
+    });
   }
 
   function esc(str) {
@@ -435,106 +438,128 @@ if (searchInput) {
     return div.innerHTML.replace(/\n/g, "<br>");
   }
 
-  function renderReplies(replies, msgId) {
-    var html = '<div class="msg-replies">';
-    (replies || []).forEach(function (r) {
-      html += '<div class="msg-reply-item">' +
-        '<div style="font-family:' + r.font + ';color:' + r.color + '">' + esc(r.content) + '</div>' +
-        '<div class="msg-reply-time">' + r.time + '</div>' +
-        '</div>';
-    });
-    html += '<div class="msg-reply-input-row">' +
-      '<input class="msg-reply-input" placeholder="回复..." maxlength="300">' +
-      '<button class="btn-reply-send">发送</button>' +
-      '</div></div>';
-    return html;
+  function fmtDate(s) {
+    var d = new Date(s);
+    var p = function (n) { return (n < 10 ? "0" : "") + n; };
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+  }
+
+  function parseBody(body) {
+    var font = "Nunito, sans-serif", color = "#3d2c5e", text = body || "";
+    var m = (body || "").match(/^\[\[FONT:(.*?)\]\]\[\[COLOR:(.*?)\]\]/);
+    if (m) { font = m[1]; color = m[2]; text = body.replace(m[0], "").trim(); }
+    return { font: font, color: color, text: text };
+  }
+
+  function wrapBody(text, font, color) {
+    return "[[FONT:" + font + "]][[COLOR:" + color + "]]" + text;
+  }
+
+  function loadReplies(issueNum, containerEl) {
+    containerEl.innerHTML = '<div style="color:var(--c-text-light);font-size:12px;padding:6px 0">加载...</div>';
+    api("GET", API + "/" + issueNum + "/comments?per_page=50")
+      .then(function (comments) {
+        if (!comments.length) { containerEl.innerHTML = ""; return; }
+        containerEl.innerHTML = "";
+        comments.forEach(function (c) {
+          var parsed = parseBody(c.body);
+          var div = document.createElement("div");
+          div.className = "msg-reply-item";
+          div.innerHTML = '<div style="font-family:' + parsed.font + ';color:' + parsed.color + '">' + esc(parsed.text) + '</div>' +
+            '<div class="msg-reply-time">' + fmtDate(c.created_at) + '</div>';
+          containerEl.appendChild(div);
+        });
+      })
+      .catch(function () { containerEl.innerHTML = '<div style="color:#ef4444;font-size:12px;padding:4px 0">加载失败</div>'; });
   }
 
   function render() {
-    var list = load();
-    msgList.innerHTML = "";
-    list.forEach(function (msg, idx) {
-      var div = document.createElement("div");
-      div.className = "msg-item";
-      div.innerHTML =
-        '<div class="msg-item-content" style="font-family:' + msg.font + ';color:' + msg.color + '">' + esc(msg.content) + '</div>' +
-        '<div class="msg-item-meta">' +
-          '<span class="msg-item-time">' + msg.time + '</span>' +
-          '<span class="msg-item-reply-btn" data-idx="' + idx + '">' + (msg.replies && msg.replies.length ? (msg.replies.length + " 条回复") : "回复") + '</span>' +
-          '<span class="msg-item-del" data-idx="' + idx + '">删除</span>' +
-        '</div>' +
-        renderReplies(msg.replies || [], idx);
-      msgList.appendChild(div);
-    });
+    msgList.innerHTML = '<div style="text-align:center;color:var(--c-text-light);padding:20px">加载留言...</div>';
+    api("GET", API + "?labels=" + LABEL + "&state=open&sort=created&direction=desc&per_page=50")
+      .then(function (issues) {
+        msgList.innerHTML = "";
+        if (!issues.length) {
+          msgList.innerHTML = '<div style="text-align:center;color:var(--c-text-light);padding:16px">暂无留言，来说两句吧~</div>';
+          return;
+        }
+        issues.forEach(function (issue) {
+          var parsed = parseBody(issue.body);
+          var div = document.createElement("div");
+          div.className = "msg-item";
+          div.innerHTML =
+            '<div class="msg-item-content" style="font-family:' + parsed.font + ';color:' + parsed.color + '">' + esc(parsed.text) + '</div>' +
+            '<div class="msg-item-meta">' +
+              '<span class="msg-item-time">' + fmtDate(issue.created_at) + '</span>' +
+              '<span class="msg-item-reply-btn" data-num="' + issue.number + '">' + (issue.comments ? (issue.comments + " 条回复") : "回复") + '</span>' +
+            '</div>' +
+            '<div class="msg-reply-box" style="display:none">' +
+              '<div class="msg-reply-list"></div>' +
+              '<div class="msg-reply-input-row">' +
+                '<input class="msg-reply-input" placeholder="回复..." maxlength="300">' +
+                '<button class="btn-reply-send">发送</button>' +
+              '</div>' +
+            '</div>';
+          msgList.appendChild(div);
 
-    // bind reply toggle
-    msgList.querySelectorAll(".msg-item-reply-btn").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var repliesEl = btn.parentElement.parentElement.querySelector(".msg-replies");
-        if (!repliesEl) return;
-        repliesEl.style.display = repliesEl.style.display === "none" ? "" : "none";
-      });
-    });
+          var toggle = div.querySelector(".msg-item-reply-btn");
+          var replyBox = div.querySelector(".msg-reply-box");
+          var replyList = div.querySelector(".msg-reply-list");
+          toggle.addEventListener("click", function () {
+            var open = replyBox.style.display !== "none";
+            replyBox.style.display = open ? "none" : "";
+            if (!open && !replyList.dataset.loaded) {
+              loadReplies(issue.number, replyList);
+              replyList.dataset.loaded = "1";
+            }
+          });
 
-    // bind reply send
-    msgList.querySelectorAll(".btn-reply-send").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var row = btn.parentElement;
-        var input = row.querySelector(".msg-reply-input");
-        var repliesEl = row.parentElement;
-        var msgItem = repliesEl.parentElement;
-        var replyBtn = msgItem.querySelector(".msg-item-reply-btn");
-        var idx = parseInt(replyBtn.dataset.idx);
-        var val = input.value.trim();
-        if (!val) return;
-
-        var list = load();
-        if (!list[idx].replies) list[idx].replies = [];
-        list[idx].replies.push({
-          content: val,
-          time: fmtDate(),
-          font: fontPicker ? fontPicker.value : "Nunito",
-          color: colorPicker ? colorPicker.value : "#3d2c5e"
+          var replySend = div.querySelector(".btn-reply-send");
+          var replyInput = div.querySelector(".msg-reply-input");
+          replySend.addEventListener("click", function () {
+            var val = replyInput.value.trim();
+            if (!val) return;
+            replySend.disabled = true; replySend.textContent = "...";
+            var body = wrapBody(val, fontPicker.value, colorPicker.value);
+            api("POST", API + "/" + issue.number + "/comments", { body: body })
+              .then(function () {
+                replyInput.value = "";
+                replySend.disabled = false; replySend.textContent = "发送";
+                delete replyList.dataset.loaded;
+                loadReplies(issue.number, replyList);
+                replyList.dataset.loaded = "1";
+                var cnt = (issue.comments || 0) + 1;
+                issue.comments = cnt;
+                toggle.textContent = cnt + " 条回复";
+              })
+              .catch(function (err) {
+                alert("回复失败: " + String(err).slice(0, 80));
+                replySend.disabled = false; replySend.textContent = "发送";
+              });
+          });
+          replyInput.addEventListener("keydown", function (e) { if (e.key === "Enter") replySend.click(); });
         });
-        save(list);
-        render();
-      });
-    });
-
-    // bind delete
-    msgList.querySelectorAll(".msg-item-del").forEach(function (del) {
-      del.addEventListener("click", function () {
-        var idx = parseInt(del.dataset.idx);
-        var list = load();
-        list.splice(idx, 1);
-        save(list);
-        render();
-      });
-    });
+      })
+      .catch(function () { msgList.innerHTML = '<div style="text-align:center;color:#ef4444;padding:16px">加载失败，请刷新重试</div>'; });
   }
 
   sendBtn.addEventListener("click", function () {
     var val = msgInput.value.trim();
     if (!val) return;
-    var list = load();
-    list.unshift({
-      content: val,
-      time: fmtDate(),
-      font: fontPicker.value,
-      color: colorPicker.value,
-      replies: []
-    });
-    save(list);
-    msgInput.value = "";
-    render();
+    sendBtn.disabled = true; sendBtn.textContent = "发送中...";
+    var body = wrapBody(val, fontPicker.value, colorPicker.value);
+    api("POST", API, { title: "[留言] " + val.slice(0, 30), body: body, labels: [LABEL] })
+      .then(function () {
+        msgInput.value = "";
+        sendBtn.disabled = false; sendBtn.textContent = "发送";
+        render();
+      })
+      .catch(function (err) {
+        alert("发送失败: " + String(err).slice(0, 80));
+        sendBtn.disabled = false; sendBtn.textContent = "发送";
+      });
   });
 
-  msgInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendBtn.click();
-    }
-  });
+  msgInput.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendBtn.click(); } });
 
   render();
 })();

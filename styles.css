@@ -1357,7 +1357,7 @@ body::after {
 }
 .msg-item-del:hover { opacity: 1; }
 
-.msg-replies {
+.msg-reply-box, .msg-replies {
   margin-top: 10px;
   padding-left: 12px;
   border-left: 2px solid var(--c-border-light);
