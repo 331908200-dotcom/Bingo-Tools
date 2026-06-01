@@ -530,9 +530,8 @@ if (searchInput) {
           var div = document.createElement("div");
           div.className = "msg-item";
           div.innerHTML =
-            '<div class="msg-item-content" style="font-family:' + parsed.font + ';color:' + parsed.color + '">' + esc(parsed.text) + '</div>' +
+            '<div class="msg-item-content" style="font-family:' + parsed.font + ';color:' + parsed.color + '">' + '<span class="msg-nick-prefix">' + esc(parsed.name) + '：</span>' + esc(parsed.text) + '</div>' +
             '<div class="msg-item-meta">' +
-              '<span class="msg-item-nick">' + esc(parsed.name) + '</span>' +
               '<span class="msg-item-time">' + fmtDate(issue.created_at) + '</span>' +
               '<span class="msg-item-reply-btn" data-num="' + issue.number + '">' + (issue.comments ? (issue.comments + " 条回复") : "回复") + '</span>' +
             '</div>' +
