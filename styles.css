@@ -161,7 +161,7 @@ body::after {
   padding: 7px 14px;
   border: 2px solid var(--c-border);
   border-radius: 24px;
-  background: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.3);
   color: var(--c-text-light);
   min-width: 160px;
   transition: all 0.2s;
@@ -1251,13 +1251,11 @@ body::after {
   padding-top: 0;
 }
 .message-box {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px);
-  border-radius: 24px;
+  background: none;
   padding: 24px;
   margin: 0 24px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.06);
+  border: none;
+  box-shadow: none;
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
@@ -1283,7 +1281,7 @@ body::after {
   padding: 6px 10px;
   border-radius: 10px;
   border: 1px solid var(--c-border-light);
-  background: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.25);
   color: var(--c-text);
   cursor: pointer;
 }
@@ -1313,7 +1311,7 @@ body::after {
   color: var(--c-text);
   resize: vertical;
   outline: none;
-  background: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.25);
   transition: border 0.2s;
 }
 .msg-input:focus {
@@ -1345,7 +1343,7 @@ body::after {
   overflow-y: auto;
 }
 .msg-item {
-  background: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.3);
   border-radius: 14px;
   padding: 14px 16px;
   border: 1px solid rgba(255,255,255,0.8);
@@ -1391,7 +1389,7 @@ body::after {
 .msg-reply-item {
   font-size: 13px;
   padding: 8px 10px;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.2);
   border-radius: 10px;
 }
 .msg-reply-time {
@@ -1412,7 +1410,7 @@ body::after {
   font-family: "Nunito", sans-serif;
   font-size: 13px;
   outline: none;
-  background: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.25);
 }
 .msg-reply-input:focus { border-color: var(--c-accent); }
 .btn-reply-send {
@@ -1439,7 +1437,7 @@ body::after {
   border-top: 2px solid var(--c-border-light);
   padding: 48px 24px;
   text-align: center;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.2);
   position: relative;
   z-index: 1;
 }
