@@ -1264,29 +1264,49 @@ body::after {
 }
 .msg-toolbar {
   display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 14px;
   align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 6px 14px;
+  display: inline-flex;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.06);
 }
 .msg-font-picker {
   font-family: "Nunito", sans-serif;
   font-size: 13px;
-  padding: 6px 10px;
-  border-radius: 10px;
-  border: 1px solid var(--c-border-light);
-  background: rgba(255,255,255,0.25);
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(139, 92, 246, 0.2);
+  background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(245,240,255,0.5));
   color: var(--c-text);
   cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+.msg-font-picker:hover {
+  border-color: var(--c-accent);
+  background: rgba(255,255,255,0.9);
 }
 .msg-color-picker {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  border: 2px solid var(--c-border-light);
+  border: 3px solid rgba(244, 114, 182, 0.4);
   cursor: pointer;
   padding: 2px;
   background: none;
+  box-shadow: 0 0 12px rgba(244, 114, 182, 0.2);
+  transition: all 0.2s;
 }
+.msg-color-picker:hover {
+  box-shadow: 0 0 18px rgba(244, 114, 182, 0.4);
+  transform: scale(1.08);
+}
+
 
 .msg-input-row {
   display: flex;
