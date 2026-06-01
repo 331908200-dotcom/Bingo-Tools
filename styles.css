@@ -1130,6 +1130,94 @@ body::after {
   }
 }
 
+
+/* ===== Donate（低调私密版）===== */
+.donate-box {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 32px 24px 0;
+  border: 1px solid var(--c-border-light);
+  text-align: center;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.donate-title {
+  font-size: 14px;
+  color: var(--c-text-light);
+  margin-bottom: 12px;
+}
+.donate-btn {
+  background: #f1f5f9;
+  border: 1px solid var(--c-border-light);
+  color: var(--c-text-light);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+  padding: 0;
+}
+.donate-btn:hover {
+  background: #e2e8f0;
+  color: var(--c-accent);
+}
+
+/* QR Overlay */
+.qr-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+.qr-modal {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  position: relative;
+  width: 260px;
+}
+.qr-close {
+  position: absolute;
+  top: 8px; right: 12px;
+  font-size: 18px;
+  color: var(--c-text-light);
+  cursor: pointer;
+  line-height: 1;
+  background: none;
+  border: none;
+}
+.qr-close:hover { color: var(--c-text); }
+.qr-img-box {
+  width: 180px;
+  height: 180px;
+  background: #f1f5f9;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px auto;
+  border: 1px dashed #cbd5e1;
+  overflow: hidden;
+}
+.qr-placeholder { font-size: 14px; color: var(--c-text-light); }
+.qr-img-box img { width: 100%; height: 100%; object-fit: contain; }
+.qr-switch {
+  font-size: 13px;
+  color: var(--c-accent);
+  cursor: pointer;
+  margin-top: 8px;
+}
+.qr-switch:hover { color: var(--c-accent-hover); }
+
 /* ===== Footer ===== */
 .footer {
   border-top: 2px solid var(--c-border-light);

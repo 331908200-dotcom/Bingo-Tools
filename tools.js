@@ -357,3 +357,39 @@ if (searchInput) {
     renderModuleGridFiltered();
   });
 }
+
+// ===== Donate QR =====
+(function () {
+  var donateBtn = document.getElementById("donateBtn");
+  var qrOverlay = document.getElementById("qrOverlay");
+  var qrClose = document.getElementById("qrClose");
+  var qrImgBox = document.getElementById("qrImgBox");
+  var qrSwitch = document.getElementById("qrSwitch");
+
+  if (!donateBtn) return;
+
+  var isWeChat = true;
+
+  donateBtn.addEventListener("click", function () {
+    qrOverlay.style.display = "flex";
+  });
+
+  qrClose.addEventListener("click", function () {
+    qrOverlay.style.display = "none";
+  });
+
+  qrOverlay.addEventListener("click", function (e) {
+    if (e.target === qrOverlay) qrOverlay.style.display = "none";
+  });
+
+  qrSwitch.addEventListener("click", function () {
+    isWeChat = !isWeChat;
+    if (isWeChat) {
+      qrImgBox.innerHTML = "<span class=\"qr-placeholder\">微信收款码</span>";
+      qrSwitch.innerText = "点击切换：支付宝";
+    } else {
+      qrImgBox.innerHTML = "<img src=\"assets/alipay-qr.png\" alt=\"支付宝收款码\">";
+      qrSwitch.innerText = "点击切换：微信";
+    }
+  });
+})();
