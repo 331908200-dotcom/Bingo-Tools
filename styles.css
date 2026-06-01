@@ -1200,6 +1200,22 @@ body::after {
   transition: all 0.2s;
 }
 .qr-close:hover { background: rgba(0,0,0,0.08); color: var(--c-text); }
+
+.qr-title {
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--c-text);
+  margin-bottom: 10px;
+}
+.qr-thanks {
+  font-family: "Nunito", sans-serif;
+  font-size: 13px;
+  color: var(--c-text-muted);
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
 .qr-img-box {
   width: 200px;
   height: 200px;

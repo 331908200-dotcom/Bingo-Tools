@@ -355,8 +355,6 @@ if (searchInput) {
     document.getElementById("tools").scrollIntoView({ behavior: "smooth" });
     render();
     renderModuleGridFiltered();
-  });
-}
 
 // ===== Donate QR =====
 (function () {
@@ -364,6 +362,7 @@ if (searchInput) {
   var qrOverlay = document.getElementById("qrOverlay");
   var qrClose = document.getElementById("qrClose");
   var qrImgBox = document.getElementById("qrImgBox");
+  var qrTitle = document.getElementById("qrTitle");
   var qrSwitch = document.getElementById("qrSwitch");
 
   if (!donateBtn) return;
@@ -371,6 +370,10 @@ if (searchInput) {
   var isWeChat = true;
 
   donateBtn.addEventListener("click", function () {
+    isWeChat = true;
+    qrImgBox.innerHTML = '<img src="assets/wechat-qr.png" alt="微信收款码">';
+    qrTitle.innerText = "微信收款码";
+    qrSwitch.innerText = "点击切换：支付宝";
     qrOverlay.style.display = "flex";
   });
 
@@ -386,13 +389,16 @@ if (searchInput) {
     isWeChat = !isWeChat;
     if (isWeChat) {
       qrImgBox.innerHTML = '<img src="assets/wechat-qr.png" alt="微信收款码">';
+      qrTitle.innerText = "微信收款码";
       qrSwitch.innerText = "点击切换：支付宝";
     } else {
-      qrImgBox.innerHTML = "<img src=\"assets/alipay-qr.png\" alt=\"支付宝收款码\">";
+      qrImgBox.innerHTML = '<img src="assets/alipay-qr.png" alt="支付宝收款码">';
+      qrTitle.innerText = "支付宝收款码";
       qrSwitch.innerText = "点击切换：微信";
     }
   });
 })();
+
 
 
 // ===== Message Board (GitHub Issues API) =====
