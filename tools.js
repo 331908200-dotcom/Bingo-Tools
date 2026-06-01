@@ -405,6 +405,18 @@ if (searchInput) {
 
   if (!msgInput || !msgList) return;
 
+
+  // 实时预览字体/颜色到输入框
+  fontPicker.addEventListener("change", function () {
+    msgInput.style.fontFamily = fontPicker.value;
+  });
+  colorPicker.addEventListener("input", function () {
+    msgInput.style.color = colorPicker.value;
+  });
+  // 初始应用
+  msgInput.style.fontFamily = fontPicker.value;
+  msgInput.style.color = colorPicker.value;
+
   function load() {
     try { return JSON.parse(localStorage.getItem(STORAGE)) || []; }
     catch (e) { return []; }
