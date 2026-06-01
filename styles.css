@@ -1263,6 +1263,14 @@ body::after {
   margin-right: auto;
 }
 
+
+.msg-hint {
+  font-family: "Nunito", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  color: var(--c-text-light);
+  margin-bottom: 16px;
+  text-align: center;
+}
 .msg-toolbar {
   display: flex;
   gap: 8px;
