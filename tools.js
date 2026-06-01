@@ -428,27 +428,6 @@ if (searchInput) {
     userName = adjectives[Math.floor(Math.random() * adjectives.length)] + animals[Math.floor(Math.random() * animals.length)];
     localStorage.setItem(USER_KEY, userName);
 
-  var authorToggle = document.getElementById("authorToggle");
-  var isAuthor = localStorage.getItem("bingo_is_author") === "1";
-  if (isAuthor) {
-    userName = "作者";
-    if (authorToggle) { authorToggle.textContent = "✅ 作者"; authorToggle.classList.add("author-active"); }
-  }
-  if (authorToggle) {
-    authorToggle.addEventListener("click", function () {
-      isAuthor = !isAuthor;
-      if (isAuthor) {
-        localStorage.setItem("bingo_is_author", "1");
-        userName = "作者";
-        authorToggle.textContent = "✅ 作者";
-        authorToggle.classList.add("author-active");
-      } else {
-        localStorage.removeItem("bingo_is_author");
-        userName = adjectives[Math.floor(Math.random() * adjectives.length)] + animals[Math.floor(Math.random() * animals.length)];
-        localStorage.setItem(USER_KEY, userName);
-        authorToggle.textContent = "🔒 游客";
-        authorToggle.classList.remove("author-active");
-      }
     });
   }
 
@@ -496,7 +475,7 @@ if (searchInput) {
   }
 
   function wrapBody(text, font, color) {
-    return "[[NAME:" + userName + "]][[NAME:/(.*?/)/]/]/[/[FONT:" + font + "]]!!COLOR:" + color + "]]" + text;
+    return "[[NAME:" + userName + "]][[FONT:" + font + "]][[COLOR:" + color + "]]" + text;
   }
 
   function loadReplies(issueNum, containerEl) {
