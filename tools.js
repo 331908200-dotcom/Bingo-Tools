@@ -595,7 +595,7 @@ if (searchInput) {
       .then(function () {
         msgInput.value = "";
         sendBtn.disabled = false; sendBtn.textContent = "发送";
-        render();
+        setTimeout(function () { render(); }, 800);
       })
       .catch(function (err) {
         alert("发送失败: " + String(err).slice(0, 80));
