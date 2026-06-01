@@ -191,31 +191,37 @@ function getFilteredTools() {
 
 // ===== Module Grid (hero下面) =====
 function renderModuleGrid() {
-  moduleGrid.innerHTML = tools.map((tool) => `
-    <div class="module-card" data-tool="${escapeAttribute(tool.name)}">
-      <div class="module-card-header">
-        <img src="${tool.icon}" alt="" loading="lazy">
-        <div>
-          <h3>${escapeHtml(tool.name)}</h3>
-          <span class="module-status">${escapeHtml(tool.status)}</span>
-        </div>
-      </div>
-      <p>${escapeHtml(tool.summary)}</p>
-      <div class="module-tags">
-        ${tool.tags.slice(0, 4).map((tag) => `<span class="module-tag">${escapeHtml(tag)}</span>`).join("")}
-      </div>
-    </div>
-  `).join("");
+  moduleGrid.innerHTML = tools.map(function (tool) {
+    return '<div class="module-card" data-tool="' + escapeAttribute(tool.name) + '">' +
+      '<div class="module-card-header">' +
+        '<img src="' + tool.icon + '" alt="" loading="lazy">' +
+        '<div><h3>' + escapeHtml(tool.name) + '</h3>' +
+        '<span class="module-status">' + escapeHtml(tool.status) + '</span></div>' +
+      '</div>' +
+      '<p>' + escapeHtml(tool.summary) + '</p>' +
+      '<div class="module-tags">' +
+        tool.tags.slice(0, 4).map(function (tag) { return '<span class="module-tag">' + escapeHtml(tag) + '</span>'; }).join("") +
+      '</div>' +
+    '</div>';
+  }).join("");
 
-  moduleGrid.querySelectorAll(".module-card").forEach((card) => {
-    card.addEventListener("click", () => {
+  moduleGrid.querySelectorAll(".module-card").forEach(function (card) {
+    card.addEventListener("click", function () {
       state.selected = card.dataset.tool;
       state.category = "All";
-      searchInput.value = "";
+      if (searchInput) searchInput.value = "";
       state.query = "";
       document.getElementById("tools").scrollIntoView({ behavior: "smooth" });
       render();
     });
+  });
+}
+
+function renderModuleGridFiltered() {
+  moduleGrid.querySelectorAll(".module-card").forEach(function (card) {
+    var name = card.dataset.tool.toLowerCase();
+    var query = state.query.toLowerCase();
+    card.style.display = query && !name.includes(query) ? "none" : "";
   });
 }
 
@@ -342,7 +348,12 @@ function render() {
 renderModuleGrid();
 render();
 
-searchInput.addEventListener("input", function (e) {
-  state.query = e.target.value;
-  render();
-});
+if (searchInput) {
+  searchInput.addEventListener("input", function (e) {
+    state.query = e.target.value;
+    state.category = "All";
+    document.getElementById("tools").scrollIntoView({ behavior: "smooth" });
+    render();
+    renderModuleGridFiltered();
+  });
+}
