@@ -936,6 +936,17 @@ body::after {
   mix-blend-mode: normal;
 }
 
+/* ===== Comments ===== */
+.comments-box {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px;
+  border: 2px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.9);
+  box-shadow: var(--c-shadow);
+}
+
 /* ===== Footer ===== */
 .footer {
   border-top: 2px solid var(--c-border-light);
