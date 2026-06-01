@@ -115,20 +115,27 @@
     </div>
   </section>
 
-  <!-- ===== 评论 ===== -->
+  <!-- ===== 留言反馈 ===== -->
   <section id="comments" class="section">
     <div class="section-header">
-      <h2>建议 & 反馈</h2>
-      <p>用 GitHub 账号登录即可留言，管理员可删除不当评论</p>
+      <h2>💬 留言反馈</h2>
+      <p>无需登录，畅所欲言。管理员可删除不当评论</p>
     </div>
     <div class="comments-box">
-      <script src="https://utteranc.es/client.js"
-        repo="331908200-dotcom/Bingo-Tools"
-        issue-term="pathname"
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
-      </script>
+      <p class="msg-hint">欢迎留下使用感受、建议或问题，每一条我都会认真看 😊</p>
+      <div class="msg-input-row">
+        <input type="text" id="msgNick" placeholder="你的昵称（选填）" maxlength="20">
+        <input type="text" id="msgInput" placeholder="写点什么..." maxlength="500">
+        <button class="btn btn-primary btn-msg-send" id="sendBtn">发送</button>
+      </div>
+      <div id="msgList" class="msg-list"></div>
+      <div class="msg-admin">
+        <button class="btn-admin-toggle" id="adminToggle">🔑 管理员</button>
+        <span class="admin-actions" id="adminActions" style="display:none">
+          <button class="btn-del-all" id="clearAllBtn">清空全部</button>
+          <button class="btn-lock" id="adminExit">退出管理</button>
+        </span>
+      </div>
     </div>
   </section>
 
