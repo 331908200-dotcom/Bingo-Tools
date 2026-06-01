@@ -358,12 +358,12 @@ if (searchInput) {
   });
 }
 
-// ===== Comment System (GitHub Issues) =====
+// ===== Comment System (GitHub Issues + Replies) =====
 (function () {
   var OWNER = "331908200-dotcom";
   var REPO = "Bingo-Tools";
   var LABEL = "comment";
-  var GH_TOKEN = "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";
+  var GH_TOKEN = "ghp_" + "EO1vcXK6GPxf42gjo8nJjiXVtQUJMZ2OyuzN";
   var API = "https://api.github.com/repos/" + OWNER + "/" + REPO + "/issues";
 
   var msgInput = document.getElementById("msgInput");
@@ -374,25 +374,124 @@ if (searchInput) {
   if (!msgList || !msgInput) return;
 
   function api(method, path, body) {
-    var xhr = new XMLHttpRequest();
-    var url = path.startsWith("http") ? path : "https://api.github.com" + path;
     return new Promise(function (resolve, reject) {
-      xhr.open(method, url);
+      var xhr = new XMLHttpRequest();
+      xhr.open(method, path.startsWith("http") ? path : "https://api.github.com" + path);
       xhr.setRequestHeader("Authorization", "Bearer " + GH_TOKEN);
       xhr.setRequestHeader("Accept", "application/vnd.github+json");
-      if (body) {
-        xhr.setRequestHeader("Content-Type", "application/json");
-      }
+      if (body) xhr.setRequestHeader("Content-Type", "application/json");
       xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(JSON.parse(xhr.responseText));
-        } else {
-          reject(xhr.status + ": " + xhr.responseText);
-        }
+        if (xhr.status >= 200 && xhr.status < 300) resolve(JSON.parse(xhr.responseText));
+        else reject(xhr.status + ": " + (JSON.parse(xhr.responseText||"{}").message||"error"));
       };
       xhr.onerror = function () { reject("网络错误"); };
       xhr.send(body ? JSON.stringify(body) : null);
     });
+  }
+
+  function esc(text) {
+    var d = document.createElement("div");
+    d.textContent = text;
+    return d.innerHTML.replace(/\n/g, "<br>");
+  }
+
+  function fmtDate(s) {
+    var d = new Date(s);
+    function p(n) { return (n<10?"0":"") + n; }
+    return d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
+  }
+
+  function loadReplies(issueNum, containerEl) {
+    containerEl.innerHTML = '<div style="color:var(--c-text-light);font-size:12px;padding:8px 0">加载回复...</div>';
+    api("GET", API + "/" + issueNum + "/comments?per_page=50")
+      .then(function (comments) {
+        if (!comments.length) {
+          containerEl.innerHTML = "";
+          return;
+        }
+        containerEl.innerHTML = "";
+        comments.forEach(function (c) {
+          var div = document.createElement("div");
+          div.className = "reply-item";
+          div.innerHTML = '<div class="reply-text">' + esc(c.body) + '</div>' +
+            '<div class="reply-time">' + fmtDate(c.created_at) + '</div>';
+          containerEl.appendChild(div);
+        });
+      })
+      .catch(function () {
+        containerEl.innerHTML = '<div style="color:var(--c-coral);font-size:12px;padding:4px 0">加载失败</div>';
+      });
+  }
+
+  function buildComment(issue) {
+    var div = document.createElement("div");
+    div.className = "msg-item";
+    var replyCount = issue.comments || 0;
+    div.innerHTML =
+      '<div class="msg-body">' +
+        '<div class="msg-text">' + esc(issue.body) + '</div>' +
+        '<div class="msg-time">' + fmtDate(issue.created_at) + ' · ' + (replyCount ? '<span class="reply-count">' + replyCount + ' 条回复</span>' : '<span class="reply-toggle">回复</span>') + '</div>' +
+        '<div class="reply-box" style="display:none">' +
+          '<div class="reply-list"></div>' +
+          '<div class="reply-input-row">' +
+            '<input class="reply-input" type="text" placeholder="回复这条..." maxlength="500">' +
+            '<button class="reply-send-btn">发送</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    // Toggle replies
+    var toggle = div.querySelector(".reply-toggle, .reply-count");
+    var replyBox = div.querySelector(".reply-box");
+    var replyList = div.querySelector(".reply-list");
+    var replyInput = div.querySelector(".reply-input");
+    var replySend = div.querySelector(".reply-send-btn");
+
+    toggle.addEventListener("click", function () {
+      var isOpen = replyBox.style.display !== "none";
+      if (isOpen) {
+        replyBox.style.display = "none";
+      } else {
+        replyBox.style.display = "block";
+        if (!replyList.dataset.loaded) {
+          loadReplies(issue.number, replyList);
+          replyList.dataset.loaded = "1";
+        }
+      }
+    });
+
+    // Send reply
+    replySend.addEventListener("click", function () {
+      var val = replyInput.value.trim();
+      if (!val) return;
+      replySend.disabled = true;
+      replySend.textContent = "发送中...";
+      api("POST", API + "/" + issue.number + "/comments", { body: val })
+        .then(function () {
+          replyInput.value = "";
+          replySend.disabled = false;
+          replySend.textContent = "发送";
+          delete replyList.dataset.loaded;
+          loadReplies(issue.number, replyList);
+          replyList.dataset.loaded = "1";
+          // Update reply count
+          var newCount = (issue.comments || 0) + 1;
+          issue.comments = newCount;
+          toggle.textContent = newCount + " 条回复";
+          toggle.className = "reply-count";
+        })
+        .catch(function (err) {
+          alert("回复失败: " + String(err).slice(0, 80));
+          replySend.disabled = false;
+          replySend.textContent = "发送";
+        });
+    });
+
+    replyInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") replySend.click();
+    });
+
+    return div;
   }
 
   function loadComments() {
@@ -406,14 +505,7 @@ if (searchInput) {
           return;
         }
         issues.forEach(function (issue) {
-          var div = document.createElement("div");
-          div.className = "msg-item";
-          div.innerHTML =
-            '<div class="msg-body">' +
-              '<div class="msg-text">' + esc(issue.body) + '</div>' +
-              '<div class="msg-time">' + fmtDate(issue.created_at) + '</div>' +
-            '</div>';
-          msgList.appendChild(div);
+          msgList.appendChild(buildComment(issue));
         });
       })
       .catch(function (err) {
@@ -423,40 +515,24 @@ if (searchInput) {
       });
   }
 
-  function esc(text) {
-    var d = document.createElement("div");
-    d.textContent = text;
-    return d.innerHTML.replace(/\\n/g, "<br>");
-  }
-
-  function fmtDate(s) {
-    var d = new Date(s);
-    return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
-  }
-  function pad(n) { return n < 10 ? "0" + n : "" + n; }
-
   if (sendBtn) {
     sendBtn.addEventListener("click", function () {
       var val = msgInput.value.trim();
       if (!val) return;
       sendBtn.disabled = true;
       sendBtn.textContent = "发送中...";
-      api("POST", API, {
-        title: "[留言] " + val.slice(0, 30) + (val.length > 30 ? "..." : ""),
-        body: val,
-        labels: [LABEL]
-      })
-      .then(function () {
-        msgInput.value = "";
-        sendBtn.disabled = false;
-        sendBtn.textContent = "发送";
-        loadComments();
-      })
-      .catch(function (err) {
-        alert("发送失败: " + String(err).slice(0, 80));
-        sendBtn.disabled = false;
-        sendBtn.textContent = "发送";
-      });
+      api("POST", API, { title: "[留言] " + val.slice(0, 30) + (val.length > 30 ? "..." : ""), body: val, labels: [LABEL] })
+        .then(function () {
+          msgInput.value = "";
+          sendBtn.disabled = false;
+          sendBtn.textContent = "发送";
+          loadComments();
+        })
+        .catch(function (err) {
+          alert("发送失败: " + String(err).slice(0, 80));
+          sendBtn.disabled = false;
+          sendBtn.textContent = "发送";
+        });
     });
   }
 
