@@ -1308,11 +1308,123 @@ body::after {
 .msg-color-picker::-webkit-color-swatch-wrapper { padding: 0; }
 .msg-color-picker::-webkit-color-swatch { border: none; border-radius: 50%; }
 .msg-color-picker::-moz-color-swatch { border: none; border-radius: 50%; }
-.msg-color-picker:hover {
-  box-shadow: 0 0 18px rgba(244, 114, 182, 0.4);
-  transform: scale(1.08);
+.author-toggle {
+  font-family: "Nunito", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-light);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+  user-select: none;
 }
+.author-toggle:hover { color: var(--c-accent); background: rgba(255,255,255,0.6); }
+.author-toggle.author-active { color: #fff; background: var(--c-accent); }
 
+.msg-color-picker:hover {
+.author-toggle {
+  font-family: "Nunito", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-light);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+  user-select: none;
+}
+.author-toggle:hover { color: var(--c-accent); background: rgba(255,255,255,0.6); }
+.author-toggle.author-active { color: #fff; background: var(--c-accent); }
+
+  box-shadow: 0 0 18px rgba(244, 114, 182, 0.4);
+.author-toggle {
+  font-family: "Nunito", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-light);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+  user-select: none;
+}
+.author-toggle:hover { color: var(--c-accent); background: rgba(255,255,255,0.6); }
+.author-toggle.author-active { color: #fff; background: var(--c-accent); }
+
+  transform: scale(1.08);
+.author-toggle {
+  font-family: "Nunito", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-light);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+  user-select: none;
+}
+.author-toggle:hover { color: var(--c-accent); background: rgba(255,255,255,0.6); }
+.author-toggle.author-active { color: #fff; background: var(--c-accent); }
+
+}
+.author-toggle {
+  font-family: "Nunito", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-light);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+  user-select: none;
+}
+.author-toggle:hover { color: var(--c-accent); background: rgba(255,255,255,0.6); }
+.author-toggle.author-active { color: #fff; background: var(--c-accent); }
+
+
+.author-toggle {
+  font-family: "Nunito", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-light);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+  user-select: none;
+}
+.author-toggle:hover { color: var(--c-accent); background: rgba(255,255,255,0.6); }
+.author-toggle.author-active { color: #fff; background: var(--c-accent); }
+
+
+.author-toggle {
+  font-family: "Nunito", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text-light);
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+  user-select: none;
+}
+.author-toggle:hover { color: var(--c-accent); background: rgba(255,255,255,0.6); }
+.author-toggle.author-active { color: #fff; background: var(--c-accent); }
 
 .msg-input-row {
   display: flex;
