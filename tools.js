@@ -490,13 +490,13 @@ if (searchInput) {
 
   function parseBody(body) {
     var name = "匿名", font = "Nunito, sans-serif", color = "#3d2c5e", text = body || "";
-    var m = (body || "").match(/^\[\[FONT:(.*?)\]\]\[\[COLOR:(.*?)\]\]/);
+    var m = (body || "").match(/^\[\[NAME:(.*?)\]\]\[\[FONT:(.*?)\]\]\[\[COLOR:(.*?)\]\]/);
     if (m) { name = m[1]; font = m[2]; color = m[3]; text = body.replace(m[0], "").trim(); }
     return { name: name, font: font, color: color, text: text };
   }
 
   function wrapBody(text, font, color) {
-    return "[[NAME:" + userName + "]][[FONT:" + font + "]][[COLOR:" + color + "]]" + text;
+    return "[[NAME:" + userName + "]][[NAME:/(.*?/)/]/]/[/[FONT:" + font + "]]!!COLOR:" + color + "]]" + text;
   }
 
   function loadReplies(issueNum, containerEl) {
